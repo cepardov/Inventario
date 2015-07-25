@@ -21,5 +21,33 @@ package entidad;
  * @author cepardov
  */
 public class Unidadmedida {
+    protected String idUnidadmedida;
+    protected String valor;
+    protected String error;
+
+    public String getIdUnidadmedida() {
+        return idUnidadmedida;
+    }
+
+    public void setIdUnidadmedida(String idUnidadmedida) {
+        this.idUnidadmedida = idUnidadmedida;
+    }
+
+    public String getValor() {
+        return valor;
+    }
+
+    public void setValor(String valor) {
+        this.valor = valor;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
+    }
+    
     
 }

@@ -21,5 +21,96 @@ package entidad;
  * @author cepardov
  */
 public class Ejecutivo {
+    protected String idEjecutivo;
+    protected String identificador;
+    protected String nombre;
+    protected String apellido;
+    protected String descripcion;
+    protected String correo;
+    protected String telefono;
+    protected String movil;
+    protected String idProveedor;
+    protected String error;
+
+    public String getIdEjecutivo() {
+        return idEjecutivo;
+    }
+
+    public void setIdEjecutivo(String idEjecutivo) {
+        this.idEjecutivo = idEjecutivo;
+    }
+
+    public String getIdentificador() {
+        return identificador;
+    }
+
+    public void setIdentificador(String identificador) {
+        this.identificador = identificador;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getApellido() {
+        return apellido;
+    }
+
+    public void setApellido(String apellido) {
+        this.apellido = apellido;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public String getCorreo() {
+        return correo;
+    }
+
+    public void setCorreo(String correo) {
+        this.correo = correo;
+    }
+
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
+    }
+
+    public String getMovil() {
+        return movil;
+    }
+
+    public void setMovil(String movil) {
+        this.movil = movil;
+    }
+
+    public String getIdProveedor() {
+        return idProveedor;
+    }
+
+    public void setIdProveedor(String idProveedor) {
+        this.idProveedor = idProveedor;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
+    }
+    
     
 }

@@ -20,19 +20,28 @@ package entidad;
  *
  * @author cepardov
  */
-public class Categorias {
-    protected String idCategoria;
+public class Fabricante {
+    protected String idFabricante;
+    protected String identificador;
     protected String nombre;
-    protected String decripcion;
-    protected String porcentajeDescuento;
+    protected String descripcion;
+    protected String idProveedor;
     protected String error;
 
-    public String getIdCategoria() {
-        return idCategoria;
+    public String getIdFabricante() {
+        return idFabricante;
     }
 
-    public void setIdCategoria(String idCategoria) {
-        this.idCategoria = idCategoria;
+    public void setIdFabricante(String idFabricante) {
+        this.idFabricante = idFabricante;
+    }
+
+    public String getIdentificador() {
+        return identificador;
+    }
+
+    public void setIdentificador(String identificador) {
+        this.identificador = identificador;
     }
 
     public String getNombre() {
@@ -43,20 +52,20 @@ public class Categorias {
         this.nombre = nombre;
     }
 
-    public String getDecripcion() {
-        return decripcion;
+    public String getDescripcion() {
+        return descripcion;
     }
 
-    public void setDecripcion(String decripcion) {
-        this.decripcion = decripcion;
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 
-    public String getPorcentajeDescuento() {
-        return porcentajeDescuento;
+    public String getIdProveedor() {
+        return idProveedor;
     }
 
-    public void setPorcentajeDescuento(String porcentajeDescuento) {
-        this.porcentajeDescuento = porcentajeDescuento;
+    public void setIdProveedor(String idProveedor) {
+        this.idProveedor = idProveedor;
     }
 
     public String getError() {
