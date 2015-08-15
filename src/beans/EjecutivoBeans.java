@@ -27,6 +27,9 @@ public class EjecutivoBeans extends Ejecutivo{
     public boolean findByID(){
         return ejecutivoDao.findById(this);
     }
+    public boolean findByIdentificador(){
+        return ejecutivoDao.findByIdentificador(this);
+    }
     public boolean findByName(){
         return ejecutivoDao.findByName(this);
     }

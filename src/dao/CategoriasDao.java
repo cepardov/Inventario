@@ -37,16 +37,16 @@ public class CategoriasDao {
         Object[][] data = new String[posid][4];
         try{
             PreparedStatement pstm = getConnection().prepareStatement("SELECT "
-                    + "idCategoria,"
+                    + "idCategorias,"
                     + "nombre,"
                     + "descripcion,"
                     + "porcentajeDescuento"
-                    + " FROM categorias ORDER BY idCategoria");
+                    + " FROM categorias ORDER BY idCategorias");
             try (ResultSet res = pstm.executeQuery()) {
                 int increment = 0;
                 while(res.next()){
                     
-                    String estIdCategoria = res.getString("idCategoria");
+                    String estIdCategoria = res.getString("idCategorias");
                     String estNombre= res.getString("nombre");
                     String estDescripcion = res.getString("descripcion");
                     String estPorcentajeDescuento = res.getString("porcentajeDescuento");
@@ -123,7 +123,7 @@ public class CategoriasDao {
                     "INSERT INTO categorias ("
                     + "idCategorias,"
                     + "nombre,"
-                    + "detalle,"
+                    + "descripcion,"
                     + "porcentajeDescuento) "
                     + "VALUES (?, ?, ?, ?)");
             saveCategorias.setString(1, categorias.getIdCategoria());
@@ -146,11 +146,11 @@ public class CategoriasDao {
         PreparedStatement saveCategorias;
         try {
             saveCategorias = getConnection().prepareStatement("UPDATE categorias SET "
-                    + "idCategoria=?,"
+                    + "idCategorias=?,"
                     + "nombre=?,"
                     + "descripcion=?,"
                     + "porcentajeDescuento=?"
-                    + " WHERE idCategoria=?");
+                    + " WHERE idCategorias=?");
             saveCategorias.setString(1, categorias.getIdCategoria());
             saveCategorias.setString(2, categorias.getNombre());
             saveCategorias.setString(3, categorias.getDecripcion());
@@ -174,7 +174,7 @@ public class CategoriasDao {
 
             if (categorias.getIdCategoria() != null) {
                 delCategorias = getConnection().prepareStatement(
-                        "DELETE FROM categorias WHERE idCategoria=?");
+                        "DELETE FROM categorias WHERE idCategorias=?");
                 delCategorias.setString(1, categorias.getIdCategoria());
                 delCategorias.executeUpdate();
             }

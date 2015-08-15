@@ -70,11 +70,38 @@ public class FabricanteDao {
     }
     
     public boolean findById(Fabricante fabricante) {
+        System.out.println("Accion");
         PreparedStatement getFabricante;
         ResultSet result = null;
         try {
             getFabricante = getConnection().prepareStatement("SELECT * FROM fabricante WHERE idFabricante = ?");
             getFabricante.setString(1, fabricante.getIdFabricante());
+            result = getFabricante.executeQuery();
+            if (result.next()) {
+                fabricante.setIdFabricante(result.getString("idFabricante"));
+                fabricante.setIdentificador(result.getString("identificador"));
+                fabricante.setNombre(result.getString("nombre"));
+                fabricante.setDescripcion(result.getString("descripcion"));
+                fabricante.setIdProveedor(result.getString("idProveedor"));
+                result.close();
+            } else {
+                return false;
+            }
+            closeConnection();
+            return true;
+        } catch (SQLException se) {
+            System.err.println("Se ha producido un error de BD.");
+            System.err.println(se.getMessage());
+            return false;
+        }
+    }
+    
+    public boolean findByIdentificador(Fabricante fabricante) {
+        PreparedStatement getFabricante;
+        ResultSet result = null;
+        try {
+            getFabricante = getConnection().prepareStatement("SELECT * FROM fabricante WHERE identificador = ?");
+            getFabricante.setString(1, fabricante.getIdentificador());
             result = getFabricante.executeQuery();
             if (result.next()) {
                 fabricante.setIdFabricante(result.getString("idFabricante"));
@@ -131,7 +158,7 @@ public class FabricanteDao {
                     + "nombre,"
                     + "descripcion,"
                     + "idProveedor)"
-                    + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                    + " VALUES (?, ?, ?, ?, ?)");
             saveFabricante.setString(1, fabricante.getIdFabricante());
             saveFabricante.setString(2, fabricante.getIdentificador());
             saveFabricante.setString(3, fabricante.getNombre());
@@ -171,8 +198,16 @@ public class FabricanteDao {
             return true;
         } catch (SQLException se) {
             int errorcod=se.getErrorCode();
+            switch(errorcod){
+                case 1062:
+                    fabricante.setError("["+errorcod+"] Entrada duplicada\n"+se.getMessage());
+                    break;
+                default:
+                    fabricante.setError(""+errorcod);
+                    break;
+            }
             System.err.println("Debug: ("+errorcod+") Error ejecutando updateFabricante(): "+se.getMessage());
-            fabricante.setError(""+errorcod);
+            
             return false;
         }
     }

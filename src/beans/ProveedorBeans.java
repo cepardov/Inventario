@@ -30,6 +30,9 @@ public class ProveedorBeans extends Proveedor{
     public boolean findByName(){
         return proveedorDao.findByName(this);
     }
+    public boolean findByRut(){
+        return proveedorDao.findByRut(this);
+    }
     public Object[][] getProveedor(){
         return proveedorDao.getProveedor();
     }

@@ -117,6 +117,31 @@ public class ProveedorDao {
         }
     }
     
+    public boolean findByRut(Proveedor proveedor) {
+        PreparedStatement getProveedor;
+        ResultSet result = null;
+        try {
+            getProveedor = getConnection().prepareStatement("SELECT * FROM proveedor WHERE rut = ?");
+            getProveedor.setString(1, proveedor.getRut());
+            result = getProveedor.executeQuery();
+            if (result.next()) {
+                proveedor.setIdProveedor(result.getString("idProveedor"));
+                proveedor.setRut(result.getString("rut"));
+                proveedor.setNombre(result.getString("nombre"));
+                proveedor.setDescripcion(result.getString("descripcion"));
+                result.close();
+            } else {
+                return false;
+            }
+            closeConnection();
+            return true;
+        } catch (SQLException se) {
+            System.err.println("Se ha producido un error de BD.");
+            System.err.println(se.getMessage());
+            return false;
+        }
+    }
+    
     public boolean save(Proveedor proveedor) {
         PreparedStatement saveProveedor;
         try {
@@ -126,7 +151,7 @@ public class ProveedorDao {
                     + "rut,"
                     + "nombre,"
                     + "descripcion)"
-                    + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                    + " VALUES (?, ?, ?, ?)");
             saveProveedor.setString(1, proveedor.getIdProveedor());
             saveProveedor.setString(2, proveedor.getRut());
             saveProveedor.setString(3, proveedor.getNombre());

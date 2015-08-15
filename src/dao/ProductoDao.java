@@ -49,9 +49,9 @@ public class ProductoDao {
                     + "porcentajeDescuento,"
                     + "vencimientoDescuento,"
                     + "cantidad,"
+                    + "unidadmedida,"
                     + "idCategoria,"
-                    + "idProveedor,"
-                    + "idUnidadMedida"
+                    + "idProveedor"
                     + " FROM producto ORDER BY idProducto");
             try (ResultSet res = pstm.executeQuery()) {
                 int increment = 0;
@@ -69,9 +69,9 @@ public class ProductoDao {
                     String estPorcentajeDescuento = res.getString("porcentajeDescuento");
                     String estVencimientoDescuento = res.getString("vencimientoDescuento");
                     String estCantidad = res.getString("cantidad");
+                    String estUnidadmedida = res.getString("unidadmedida");
                     String estIdCategoria = res.getString("idCategoria");
                     String estIdProveedor = res.getString("idProveedor");
-                    String estIdUnidadMedida = res.getString("idUnidadMedida");
 
                     data[increment][0] = estIdProducto;
                     data[increment][1] = estCodReferencia;
@@ -85,9 +85,9 @@ public class ProductoDao {
                     data[increment][9] = estPorcentajeDescuento;
                     data[increment][10] = estVencimientoDescuento;
                     data[increment][11] = estCantidad;
-                    data[increment][12] = estIdCategoria;
-                    data[increment][13] = estIdProveedor;
-                    data[increment][14] = estIdUnidadMedida;
+                    data[increment][12] = estUnidadmedida;
+                    data[increment][13] = estIdCategoria;
+                    data[increment][14] = estIdProveedor;
 
                     increment++;
                 }
@@ -119,9 +119,9 @@ public class ProductoDao {
                 producto.setPorcentajeDescuento(result.getString("porcentajeDescuento"));
                 producto.setVencimientoDescuento(result.getString("vencimientoDescuento"));
                 producto.setCantidad(result.getString("cantidad"));
+                producto.setUnidadmedida(result.getString("unidadmedida"));
                 producto.setIdCategoria(result.getString("idCategoria"));
                 producto.setIdProveedor(result.getString("idProveedor"));
-                producto.setIdUnidadMedida(result.getString("idUnidadMedida"));
                 
                 result.close();
             } else {
@@ -156,9 +156,9 @@ public class ProductoDao {
                 producto.setPorcentajeDescuento(result.getString("porcentajeDescuento"));
                 producto.setVencimientoDescuento(result.getString("vencimientoDescuento"));
                 producto.setCantidad(result.getString("cantidad"));
+                producto.setUnidadmedida(result.getString("unidadmedida"));
                 producto.setIdCategoria(result.getString("idCategoria"));
                 producto.setIdProveedor(result.getString("idProveedor"));
-                producto.setIdUnidadMedida(result.getString("idUnidadMedida"));
                 
                 result.close();
             } else {
@@ -193,9 +193,9 @@ public class ProductoDao {
                 producto.setPorcentajeDescuento(result.getString("porcentajeDescuento"));
                 producto.setVencimientoDescuento(result.getString("vencimientoDescuento"));
                 producto.setCantidad(result.getString("cantidad"));
+                producto.setUnidadmedida(result.getString("unidadmedida"));
                 producto.setIdCategoria(result.getString("idCategoria"));
                 producto.setIdProveedor(result.getString("idProveedor"));
-                producto.setIdUnidadMedida(result.getString("idUnidadMedida"));
                 
                 result.close();
             } else {
@@ -230,9 +230,9 @@ public class ProductoDao {
                 producto.setPorcentajeDescuento(result.getString("porcentajeDescuento"));
                 producto.setVencimientoDescuento(result.getString("vencimientoDescuento"));
                 producto.setCantidad(result.getString("cantidad"));
+                producto.setUnidadmedida(result.getString("unidadmedida"));
                 producto.setIdCategoria(result.getString("idCategoria"));
                 producto.setIdProveedor(result.getString("idProveedor"));
-                producto.setIdUnidadMedida(result.getString("idUnidadMedida"));
                 result.close();
             } else {
                 return false;
@@ -263,9 +263,9 @@ public class ProductoDao {
                     + "porcentajeDescuento,"
                     + "vencimientoDescuento,"
                     + "cantidad,"
+                    + "unidadmedida,"
                     + "idCategoria,"
-                    + "idProveedor,"
-                    + "idUnidadMedida)"
+                    + "idProveedor"
                     + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
             saveProducto.setString(1, producto.getIdProducto());
             saveProducto.setString(2, producto.getCodReferencia());
@@ -279,9 +279,9 @@ public class ProductoDao {
             saveProducto.setString(10, producto.getPorcentajeDescuento());
             saveProducto.setString(11, producto.getVencimientoDescuento());
             saveProducto.setString(12, producto.getCantidad());
-            saveProducto.setString(13, producto.getIdCategoria());
-            saveProducto.setString(14, producto.getIdProveedor());
-            saveProducto.setString(15, producto.getIdUnidadMedida());
+            saveProducto.setString(13, producto.getUnidadmedida());
+            saveProducto.setString(14, producto.getIdCategoria());
+            saveProducto.setString(15, producto.getIdProveedor());
 
             saveProducto.executeUpdate();
 
@@ -311,9 +311,9 @@ public class ProductoDao {
                     + "porcentajeDescuento=?,"
                     + "vencimientoDescuento=?,"
                     + "cantidad=?,"
+                    + "unidadmedida=?,"
                     + "idCategoria=?,"
-                    + "idProveedor=?,"
-                    + "idUnidadMedida=?"
+                    + "idProveedor=?"
                     + " WHERE idProducto=?");
             saveProducto.setString(1, producto.getIdProducto());
             saveProducto.setString(2, producto.getCodReferencia());
@@ -327,9 +327,9 @@ public class ProductoDao {
             saveProducto.setString(10, producto.getPorcentajeDescuento());
             saveProducto.setString(11, producto.getVencimientoDescuento());
             saveProducto.setString(12, producto.getCantidad());
-            saveProducto.setString(13, producto.getIdCategoria());
-            saveProducto.setString(14, producto.getIdProveedor());
-            saveProducto.setString(15, producto.getIdUnidadMedida());
+            saveProducto.setString(13, producto.getUnidadmedida());
+            saveProducto.setString(14, producto.getIdCategoria());
+            saveProducto.setString(15, producto.getIdProveedor());
             saveProducto.setString(16, producto.getIdProducto());
             saveProducto.executeUpdate();
             

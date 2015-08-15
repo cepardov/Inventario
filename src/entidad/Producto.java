@@ -34,9 +34,9 @@ public class Producto {
     protected String porcentajeDescuento;
     protected String vencimientoDescuento;
     protected String cantidad;
+    protected String unidadmedida;
     protected String idCategoria;
     protected String idProveedor;
-    protected String idUnidadMedida;
     protected String error;
 
     public String getIdProducto() {
@@ -151,13 +151,14 @@ public class Producto {
         this.idProveedor = idProveedor;
     }
 
-    public String getIdUnidadMedida() {
-        return idUnidadMedida;
+    public String getUnidadmedida() {
+        return unidadmedida;
     }
 
-    public void setIdUnidadMedida(String idUnidadMedida) {
-        this.idUnidadMedida = idUnidadMedida;
+    public void setUnidadmedida(String unidadmedida) {
+        this.unidadmedida = unidadmedida;
     }
+    
 
     public String getError() {
         return error;

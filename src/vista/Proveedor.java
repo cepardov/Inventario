@@ -16,15 +16,8 @@
  */
 package vista;
 
-import beans.FabricanteBeans;
 import beans.ProveedorBeans;
-import conexion.DataBaseInstance;
 import java.awt.Cursor;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -32,30 +25,24 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author cepardov
  */
-public class Fabricante extends javax.swing.JInternalFrame {
-    FabricanteBeans fabricantebeans=new FabricanteBeans();
+public class Proveedor extends javax.swing.JInternalFrame {
     ProveedorBeans proveedorbeans=new ProveedorBeans();
     Object[][] dtPrev;
     int fila;
     /**
-     * Creates new form Fabricante
+     * Creates new form Proveedor
      */
-    public Fabricante() {
+    public Proveedor() {
         initComponents();
         this.inicializa();
     }
     
-    protected Connection getConnection() {
-        return DataBaseInstance.getInstanceConnection();
-    }
-    
-    protected void closeConnection() {
-        DataBaseInstance.closeConnection();
-    }
-    
-    protected int closeConnectionInt() {
-        DataBaseInstance.closeConnection();
-        return 0;
+    private void inicializa(){
+        this.lblErrorBusqueda.setText("");
+        this.cargaTablaProveedor();
+        this.btnGuardar.setEnabled(true);
+        this.btnModificar.setEnabled(false);
+        this.btnEliminar.setEnabled(false);
     }
     
     private void busy(int estado){
@@ -72,45 +59,9 @@ public class Fabricante extends javax.swing.JInternalFrame {
         }
     }
     
-    public final void inicializa(){
-//        this.cargaTablaUsuario();
-        this.lblErrorBusqueda.setText("");
-        this.cargaTablaFabricante();
-        this.getComboProveedor();
-        this.btnGuardar.setEnabled(true);
-        this.btnModificar.setEnabled(false);
-        this.btnEliminar.setEnabled(false);
-    }
-    
-    private String getNombreProveedor(String idProveedor){
-        proveedorbeans.setIdProveedor(idProveedor);
-        
-        if(!proveedorbeans.findByID()){
-            JOptionPane.showMessageDialog(null,"Error al obtener nombre Proveedor\n"+proveedorbeans.getError(), "¡ups! Algo inesperado ha pasado", JOptionPane.ERROR_MESSAGE);
-        } else {
-            return proveedorbeans.getNombre();
-        }
-        return null;
-    }
-    
-    private String getIdProveedor(String nombreProveedor){
-        proveedorbeans.setNombre(nombreProveedor);
-        System.out.println("Nombre Proveedor="+nombreProveedor);
-        if(!proveedorbeans.findByName()){
-            System.out.println("Result falso");
-            JOptionPane.showMessageDialog(null,"Error al obtener ID Proveedor\n"+proveedorbeans.getError(), "¡ups! Algo inesperado ha pasado", JOptionPane.ERROR_MESSAGE);
-        }else{
-            System.out.println("Result verdadero");
-            return proveedorbeans.getIdProveedor();
-        }
-        
-        return null;
-        
-    }
-    
-    public final void cargaTablaFabricante(){
-        String[] columNames = {"ID","Identificador","Nombre","Descripción","Proveedor"};  
-        dtPrev = fabricantebeans.getFabricante();
+    public final void cargaTablaProveedor(){
+        String[] columNames = {"ID","RUT","Nombre","Descripción"};  
+        dtPrev = proveedorbeans.getProveedor();
         DefaultTableModel datos = new DefaultTableModel(dtPrev,columNames);                        
         tabla.setModel(datos);
         //Autoredimensionar Columnas
@@ -142,59 +93,36 @@ public class Fabricante extends javax.swing.JInternalFrame {
 //        tabla.getColumnModel().getColumn(0).setPreferredWidth(0);
     }
     
-    private void getComboProveedor(){
-        try{
-            DefaultComboBoxModel modeloCombo = new DefaultComboBoxModel();
-            PreparedStatement pstm = getConnection().prepareStatement("SELECT * FROM proveedor ORDER BY nombre");
-            try (ResultSet res = pstm.executeQuery()) {
-                modeloCombo.addElement("Seleccione");
-                while (res.next()) {
-                    modeloCombo.addElement(res.getObject("nombre"));
-                }
-            }
-            this.closeConnection();
-            this.cbProveedor.setModel(modeloCombo);
-        } catch (SQLException se) {
-            System.out.println("Error al cargar combo="+se);
-        }
-    }
-    
-    private boolean verificaDatos(){
-        String idFabricante = this.lblIdFabricante.getText();
-        String identificador = this.txtIdentificador.getText();
-        String nombre = this.txtNombre.getText().toLowerCase();
+    private boolean verificarDatos(){
+        String idProveedor = this.lblIdProveedor.getText();
+        String rut = this.txtRut.getText().replace(" ", "");
+        String nombre = this.txtNombre.getText();
         String descripcion = this.txtDescripcion.getText();
-        String nombreProveedor = this.cbProveedor.getSelectedItem().toString();
         
-        if(identificador.isEmpty()){
-            JOptionPane.showMessageDialog(null,"Formulario Inclompleto. Debe llenar el campo:\n- Identificador", "Verificación de Formularios", JOptionPane.ERROR_MESSAGE);
-        } else if (nombre.isEmpty()){
+        if(rut.isEmpty()){
+            JOptionPane.showMessageDialog(null,"Formulario Inclompleto. Debe llenar el campo:\n- RUT", "Verificación de Formularios", JOptionPane.ERROR_MESSAGE);
+        } else if(nombre.isEmpty()){
             JOptionPane.showMessageDialog(null,"Formulario Inclompleto. Debe llenar el campo:\n- nombre", "Verificación de Formularios", JOptionPane.ERROR_MESSAGE);
-        } else if (nombreProveedor.equals("Seleccione")){
-            JOptionPane.showMessageDialog(null,"Formulario Inclompleto. Debe seleccionar:\n- Proveedor", "Verificación de Formularios", JOptionPane.ERROR_MESSAGE);
         } else {
-            if(idFabricante.equals("No definido")){
-                idFabricante = null;
+            if(idProveedor.equals("No Definido")){
+                idProveedor = null;
             }
-            fabricantebeans.setIdFabricante(idFabricante);
-            fabricantebeans.setIdentificador(identificador);
-            fabricantebeans.setNombre(nombre);
-            fabricantebeans.setDescripcion(descripcion);
-            fabricantebeans.setIdProveedor(this.getIdProveedor(nombreProveedor));
+            proveedorbeans.setIdProveedor(idProveedor);
+            proveedorbeans.setRut(rut);
+            proveedorbeans.setNombre(nombre);
+            proveedorbeans.setDescripcion(descripcion);
             return true;
         }
-        
         return false;
-        
     }
     
-    private boolean existenciaIdentificador(){
-        String identificador = this.txtIdentificador.getText();
+    private boolean existencia(){
+        String rut = this.txtRut.getText().replace(" ", "");
         
-        fabricantebeans.setIdentificador(identificador);
+        proveedorbeans.setRut(rut);
         
-        if(fabricantebeans.findByIdentificador()!=false){
-            JOptionPane.showMessageDialog(null,"El fabricante con identificador \""+identificador+"\" ya existe", "Verificación de Formularios", JOptionPane.ERROR_MESSAGE);
+        if(proveedorbeans.findByRut()!=false){
+            JOptionPane.showMessageDialog(null,"El Proveedor RUT\""+rut+"\" ya existe", "Verificación de Formularios", JOptionPane.ERROR_MESSAGE);
 //            this.clean();
             this.btnGuardar.setEnabled(true);
             this.btnModificar.setEnabled(false);
@@ -204,104 +132,90 @@ public class Fabricante extends javax.swing.JInternalFrame {
         }        
         return false;
     }
-    
-    //Existencia
-    private boolean existenciaNombre(){
-        String nombre = this.txtNombre.getText().toLowerCase();
-        
-        fabricantebeans.setNombre(nombre);
-        
-        if(fabricantebeans.findByName()!=false){
-            JOptionPane.showMessageDialog(null,"El fabricante \""+nombre+"\" ya existe", "Verificación de Formularios", JOptionPane.ERROR_MESSAGE);
-//            this.clean();
-            this.btnGuardar.setEnabled(true);
-            this.btnModificar.setEnabled(false);
-            this.btnEliminar.setEnabled(false);
-        } else {
-            return true;
-        }        
-        return false;
-    }
-    
-    //buscar
     
     private boolean buscar(int seleccion){
-        String idFabricante = this.lblIdFabricante.getText();
-        String identificador = this.txtIdentificador.getText();
+        
+        String idProveedor = this.lblIdProveedor.getText();
+        String rut = this.txtRut.getText().replace(" ", "");
         String nombre = this.txtNombre.getText();
+        String descripcion = this.txtDescripcion.getText();
+                
         
         switch(seleccion){
             case 0:
-                fabricantebeans.setNombre(nombre);
-                if(fabricantebeans.findByName()!=false){
-                    this.lblIdFabricante.setText(fabricantebeans.getIdFabricante());
-                    this.txtIdentificador.setText(fabricantebeans.getIdentificador());
-                    this.txtNombre.setText(fabricantebeans.getNombre());
-                    this.txtDescripcion.setText(fabricantebeans.getDescripcion());
-                    this.cbProveedor.setSelectedItem(this.getNombreProveedor(fabricantebeans.getIdProveedor()));
+                proveedorbeans.setIdProveedor(idProveedor);
+                if(proveedorbeans.findByID()!=false){
+                    this.limpiar();
+                    this.lblIdProveedor.setText(proveedorbeans.getIdProveedor());
+                    this.txtRut.setText(proveedorbeans.getRut());
+                    this.txtNombre.setText(proveedorbeans.getNombre());
+                    this.txtDescripcion.setText(proveedorbeans.getDescripcion());
                     this.btnGuardar.setEnabled(false);
                     this.btnModificar.setEnabled(true);
                     this.btnEliminar.setEnabled(true);
+                    
                 } else {
                     this.limpiar();
-                    this.lblErrorBusqueda.setText("El fabricante \""+nombre+"\" no existe");
+                    this.lblErrorBusqueda.setText("El fabricante ID: \""+idProveedor+"\" no existe");
                     this.lblErrorBusqueda.setText("No hemos encontrado lo que búscas!");
-                    return true;
+                    return false;
                 }
                 break;
             case 1:
-                fabricantebeans.setIdFabricante(idFabricante);
-                if(fabricantebeans.findByID()!=false){
-                    this.lblIdFabricante.setText(fabricantebeans.getIdFabricante());
-                    this.txtIdentificador.setText(fabricantebeans.getIdentificador());
-                    this.txtNombre.setText(fabricantebeans.getNombre());
-                    this.txtDescripcion.setText(fabricantebeans.getDescripcion());
-                    this.cbProveedor.setSelectedItem(this.getNombreProveedor(fabricantebeans.getIdProveedor()));
+                proveedorbeans.setRut(rut);
+                if(proveedorbeans.findByRut()!=false){
+                    this.limpiar();
+                    this.lblIdProveedor.setText(proveedorbeans.getIdProveedor());
+                    this.txtRut.setText(proveedorbeans.getRut());
+                    this.txtNombre.setText(proveedorbeans.getNombre());
+                    this.txtDescripcion.setText(proveedorbeans.getDescripcion());
                     this.btnGuardar.setEnabled(false);
                     this.btnModificar.setEnabled(true);
                     this.btnEliminar.setEnabled(true);
                 } else {
                     this.limpiar();
-                    this.lblErrorBusqueda.setText("El fabricante \""+nombre+"\" no existe");
+                    this.lblErrorBusqueda.setText("El fabricante RUT: \""+rut+"\" no existe");
                     this.lblErrorBusqueda.setText("No hemos encontrado lo que búscas!");
-                    return true;
+                    return false;
                 }
                 break;
-            case 3:
-                fabricantebeans.setIdentificador(identificador);
-                if(fabricantebeans.findByIdentificador()!=false){
-                    this.lblIdFabricante.setText(fabricantebeans.getIdFabricante());
-                    this.txtIdentificador.setText(fabricantebeans.getIdentificador());
-                    this.txtNombre.setText(fabricantebeans.getNombre());
-                    this.txtDescripcion.setText(fabricantebeans.getDescripcion());
-                    this.cbProveedor.setSelectedItem(this.getNombreProveedor(fabricantebeans.getIdProveedor()));
+            case 2:
+                proveedorbeans.setNombre(nombre);
+                if(proveedorbeans.findByName()!=false){
+                    this.limpiar();
+                    this.lblIdProveedor.setText(proveedorbeans.getIdProveedor());
+                    this.txtRut.setText(proveedorbeans.getRut());
+                    this.txtNombre.setText(proveedorbeans.getNombre());
+                    this.txtDescripcion.setText(proveedorbeans.getDescripcion());
                     this.btnGuardar.setEnabled(false);
                     this.btnModificar.setEnabled(true);
                     this.btnEliminar.setEnabled(true);
                 } else {
                     this.limpiar();
-                    this.lblErrorBusqueda.setText("El fabricante \""+nombre+"\" no existe");
+                    this.lblErrorBusqueda.setText("El fabricante nombre: \""+nombre+"\" no existe");
                     this.lblErrorBusqueda.setText("No hemos encontrado lo que búscas!");
-                    return true;
+                    return false;
                 }
+                System.out.println("Fin Busqueda por nombre");
                 break;
             default:
-                //ByName
+                return false;
         }
         return false;
     }
     
     public void limpiar(){
         this.lblErrorBusqueda.setText("");
-        this.lblIdFabricante.setText("No definido");
-        this.txtIdentificador.setText("");
+        this.lblIdProveedor.setText("No Definido");
+        this.txtRut.setText("");
         this.txtNombre.setText("");
         this.txtDescripcion.setText("");
-        this.cbProveedor.setSelectedItem("Seleccione");
         this.btnGuardar.setEnabled(true);
         this.btnModificar.setEnabled(false);
         this.btnEliminar.setEnabled(false);
     }
+    
+    //
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -314,17 +228,15 @@ public class Fabricante extends javax.swing.JInternalFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        lblIdFabricante = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        txtIdentificador = new javax.swing.JTextField();
-        jLabel4 = new javax.swing.JLabel();
-        txtNombre = new javax.swing.JTextField();
-        txtDescripcion = new javax.swing.JTextField();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        cbProveedor = new javax.swing.JComboBox();
-        lblErrorBusqueda = new javax.swing.JLabel();
+        lblIdProveedor = new javax.swing.JLabel();
         btnBuscar = new javax.swing.JButton();
+        txtRut = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        txtNombre = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        txtDescripcion = new javax.swing.JTextField();
+        lblErrorBusqueda = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tabla = new javax.swing.JTable();
@@ -332,28 +244,14 @@ public class Fabricante extends javax.swing.JInternalFrame {
         btnGuardar = new javax.swing.JButton();
         btnModificar = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
-        btnNuevo = new javax.swing.JButton();
+        btnCrearNuevo = new javax.swing.JButton();
         btnCerrar = new javax.swing.JButton();
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Datos Fabricante"));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Datos Proveedor"));
 
-        jLabel1.setText("ID Favricante:");
+        jLabel1.setText("ID Proveedor:");
 
-        lblIdFabricante.setText("No definido");
-
-        jLabel3.setText("Identificador:");
-
-        jLabel4.setText("Nombre Fabricante");
-
-        jLabel5.setText("Descripción");
-
-        jLabel6.setText("Asociación con un proveedor");
-
-        cbProveedor.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Seleccione" }));
-
-        lblErrorBusqueda.setForeground(new java.awt.Color(208, 22, 22));
-        lblErrorBusqueda.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblErrorBusqueda.setText("Error");
+        lblIdProveedor.setText("No Definido");
 
         btnBuscar.setText("Buscar");
         btnBuscar.addActionListener(new java.awt.event.ActionListener() {
@@ -362,6 +260,16 @@ public class Fabricante extends javax.swing.JInternalFrame {
             }
         });
 
+        jLabel3.setText("Nombre");
+
+        jLabel4.setText("Descripción");
+
+        lblErrorBusqueda.setForeground(new java.awt.Color(208, 22, 22));
+        lblErrorBusqueda.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblErrorBusqueda.setText("Error");
+
+        jLabel2.setText("RUT");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -369,34 +277,25 @@ public class Fabricante extends javax.swing.JInternalFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel4))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(txtNombre)
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                                    .addComponent(jLabel1)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(lblIdFabricante)))
-                            .addComponent(jLabel4))
+                        .addComponent(lblIdProveedor)
+                        .addGap(18, 18, 18)
+                        .addComponent(lblErrorBusqueda, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtDescripcion)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel5)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(lblErrorBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, 271, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jLabel3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtIdentificador, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnBuscar, javax.swing.GroupLayout.DEFAULT_SIZE, 75, Short.MAX_VALUE))))
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtRut, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnBuscar))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel6)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cbProveedor, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(txtDescripcion))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -405,27 +304,23 @@ public class Fabricante extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(lblIdFabricante)
-                    .addComponent(jLabel3)
-                    .addComponent(txtIdentificador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblIdProveedor)
+                    .addComponent(btnBuscar)
+                    .addComponent(txtRut, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblErrorBusqueda)
-                    .addComponent(btnBuscar))
+                    .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(jLabel5))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(cbProveedor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Lista de Fabricantes"));
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Lista Proveedores"));
 
         tabla.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -446,11 +341,15 @@ public class Fabricante extends javax.swing.JInternalFrame {
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 760, Short.MAX_VALUE)
+                .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 12, Short.MAX_VALUE))
         );
 
         btnGuardar.setText("Guardar");
@@ -474,10 +373,10 @@ public class Fabricante extends javax.swing.JInternalFrame {
             }
         });
 
-        btnNuevo.setText("Nuevo/Limpiar");
-        btnNuevo.addActionListener(new java.awt.event.ActionListener() {
+        btnCrearNuevo.setText("Crear Nuevo/Limpiar");
+        btnCrearNuevo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnNuevoActionPerformed(evt);
+                btnCrearNuevoActionPerformed(evt);
             }
         });
 
@@ -500,7 +399,7 @@ public class Fabricante extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnEliminar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnNuevo)
+                .addComponent(btnCrearNuevo)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnCerrar)
                 .addContainerGap())
@@ -511,7 +410,7 @@ public class Fabricante extends javax.swing.JInternalFrame {
                 .addComponent(btnGuardar)
                 .addComponent(btnModificar)
                 .addComponent(btnEliminar)
-                .addComponent(btnNuevo)
+                .addComponent(btnCrearNuevo)
                 .addComponent(btnCerrar))
         );
 
@@ -522,8 +421,8 @@ public class Fabricante extends javax.swing.JInternalFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -535,8 +434,8 @@ public class Fabricante extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
@@ -544,19 +443,23 @@ public class Fabricante extends javax.swing.JInternalFrame {
 
     private void btnCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarActionPerformed
         // TODO add your handling code here:
-        
         dispose();
     }//GEN-LAST:event_btnCerrarActionPerformed
+
+    private void btnCrearNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearNuevoActionPerformed
+        // TODO add your handling code here:
+        this.limpiar();
+    }//GEN-LAST:event_btnCrearNuevoActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         // TODO add your handling code here:
         this.busy(1);
-        if(this.verificaDatos()==true&&this.existenciaNombre()&&this.existenciaIdentificador()){
-            if(fabricantebeans.save()==false){
-                JOptionPane.showMessageDialog(null,"Error: "+fabricantebeans.getError(), "¡ups! Algo inesperado ha pasado", JOptionPane.ERROR_MESSAGE);
+        if(this.verificarDatos()==true&&this.existencia()){
+            if(proveedorbeans.save()==false){
+                JOptionPane.showMessageDialog(null,"Error: "+proveedorbeans.getError(), "¡ups! Algo inesperado ha pasado", JOptionPane.ERROR_MESSAGE);
             } else {
-                this.buscar(3);
-                this.cargaTablaFabricante();
+                this.buscar(1);
+                this.cargaTablaProveedor();
                 this.btnGuardar.setEnabled(false);
                 this.btnModificar.setEnabled(true);
                 this.btnEliminar.setEnabled(true);
@@ -568,11 +471,11 @@ public class Fabricante extends javax.swing.JInternalFrame {
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
         // TODO add your handling code here:
         this.busy(1);
-        if(this.verificaDatos()==true){
-            if(fabricantebeans.update()==false){
-                JOptionPane.showMessageDialog(null,"Error: "+fabricantebeans.getError(), "¡ups! Algo inesperado ha pasado", JOptionPane.ERROR_MESSAGE);
+        if(this.verificarDatos()==true){
+            if(proveedorbeans.update()==false){
+                JOptionPane.showMessageDialog(null,"Error: "+proveedorbeans.getError(), "¡ups! Algo inesperado ha pasado", JOptionPane.ERROR_MESSAGE);
             } else {
-                this.cargaTablaFabricante();
+                this.cargaTablaProveedor();
                 this.btnGuardar.setEnabled(false);
                 this.btnModificar.setEnabled(true);
                 this.btnEliminar.setEnabled(true);
@@ -584,11 +487,11 @@ public class Fabricante extends javax.swing.JInternalFrame {
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
         // TODO add your handling code here:
         this.busy(1);
-        if(this.verificaDatos()==true){
-            if(fabricantebeans.delete()==false){
-                JOptionPane.showMessageDialog(null,"Error: "+fabricantebeans.getError(), "¡ups! Algo inesperado ha pasado", JOptionPane.ERROR_MESSAGE);
+        if(this.verificarDatos()==true){
+            if(proveedorbeans.delete()==false){
+                JOptionPane.showMessageDialog(null,"Error: "+proveedorbeans.getError(), "¡ups! Algo inesperado ha pasado", JOptionPane.ERROR_MESSAGE);
             } else {
-                this.cargaTablaFabricante();
+                this.cargaTablaProveedor();
                 this.limpiar();
                 this.btnGuardar.setEnabled(true);
                 this.btnModificar.setEnabled(false);
@@ -598,48 +501,42 @@ public class Fabricante extends javax.swing.JInternalFrame {
         this.busy(0);
     }//GEN-LAST:event_btnEliminarActionPerformed
 
-    private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         // TODO add your handling code here:
-        this.limpiar();
-    }//GEN-LAST:event_btnNuevoActionPerformed
+        this.buscar(1);
+        
+    }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void tablaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaMouseClicked
         // TODO add your handling code here:
         fila = tabla.rowAtPoint(evt.getPoint());
         if (fila > -1){
-            this.lblIdFabricante.setText(String.valueOf(tabla.getValueAt(fila, 0)));
-            this.buscar(1);
+            this.lblIdProveedor.setText(String.valueOf(tabla.getValueAt(fila, 0)));
+            this.buscar(0);
         }
     }//GEN-LAST:event_tablaMouseClicked
-
-    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
-        // TODO add your handling code here:
-        this.buscar(3);
-    }//GEN-LAST:event_btnBuscarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscar;
     private javax.swing.JButton btnCerrar;
+    private javax.swing.JButton btnCrearNuevo;
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnModificar;
-    private javax.swing.JButton btnNuevo;
-    private javax.swing.JComboBox cbProveedor;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     public javax.swing.JLabel lblErrorBusqueda;
-    private javax.swing.JLabel lblIdFabricante;
+    private javax.swing.JLabel lblIdProveedor;
     private javax.swing.JTable tabla;
     private javax.swing.JTextField txtDescripcion;
-    private javax.swing.JTextField txtIdentificador;
     private javax.swing.JTextField txtNombre;
+    private javax.swing.JTextField txtRut;
     // End of variables declaration//GEN-END:variables
 }

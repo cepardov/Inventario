@@ -27,6 +27,9 @@ public class FabricanteBeans extends Fabricante{
     public boolean findByID(){
         return fabricanteDao.findById(this);
     }
+    public boolean findByIdentificador(){
+        return fabricanteDao.findByIdentificador(this);
+    }
     public boolean findByName(){
         return fabricanteDao.findByName(this);
     }

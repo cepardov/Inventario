@@ -111,6 +111,36 @@ public class EjecutivoDao {
         }
     }
     
+    public boolean findByIdentificador(Ejecutivo ejecutivo) {
+        PreparedStatement getEjecutivo;
+        ResultSet result = null;
+        try {
+            getEjecutivo = getConnection().prepareStatement("SELECT * FROM ejecutivo WHERE identificador = ?");
+            getEjecutivo.setString(1, ejecutivo.getIdentificador());
+            result = getEjecutivo.executeQuery();
+            if (result.next()) {
+                ejecutivo.setIdEjecutivo(result.getString("idEjecutivo"));
+                ejecutivo.setIdentificador(result.getString("identificador"));
+                ejecutivo.setNombre(result.getString("nombre"));
+                ejecutivo.setApellido(result.getString("apellido"));
+                ejecutivo.setDescripcion(result.getString("descripcion"));
+                ejecutivo.setCorreo(result.getString("correo"));
+                ejecutivo.setTelefono(result.getString("telefono"));
+                ejecutivo.setMovil(result.getString("movil"));
+                ejecutivo.setIdProveedor(result.getString("idProveedor"));
+                result.close();
+            } else {
+                return false;
+            }
+            closeConnection();
+            return true;
+        } catch (SQLException se) {
+            System.err.println("Se ha producido un error de BD.");
+            System.err.println(se.getMessage());
+            return false;
+        }
+    }
+    
     public boolean findByName(Ejecutivo ejecutivo) {
         PreparedStatement getEjecutivo;
         ResultSet result = null;
@@ -237,8 +267,16 @@ public class EjecutivoDao {
             return true;
         } catch (SQLException se) {
             int errorcod=se.getErrorCode();
-            System.err.println("Debug: ("+errorcod+") Error ejecutando updateEjecutivo(): "+se.getMessage());
-            ejecutivo.setError(""+errorcod);
+            switch(errorcod){
+                case 1062:
+                    ejecutivo.setError("["+errorcod+"] Entrada duplicada\n"+se.getMessage());
+                    break;
+                default:
+                    ejecutivo.setError(""+errorcod);
+                    break;
+            }
+            System.err.println("Debug: ("+errorcod+") Error ejecutando updateFabricante(): "+se.getMessage());
+            
             return false;
         }
     }
