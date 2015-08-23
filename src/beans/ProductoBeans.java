@@ -27,10 +27,19 @@ public class ProductoBeans extends Producto{
     public boolean findByID(){
         return productoDao.findById(this);
     }
+    public boolean findByEan(){
+        return productoDao.findByEan(this);
+    }
+    public boolean findByRef(){
+        return productoDao.findByRef(this);
+    }
     public boolean findByName(){
         return productoDao.findByName(this);
     }
     public Object[][] getProducto(){
         return productoDao.getProducto();
+    }
+    public Object[][] getProductoFilter(String column, String operator, String value, String order){
+        return productoDao.getProductoFilter(column, operator, value, order);
     }
 }

@@ -37,6 +37,7 @@ public class Producto {
     protected String unidadmedida;
     protected String idCategoria;
     protected String idProveedor;
+    protected String idFabricante;
     protected String error;
 
     public String getIdProducto() {
@@ -135,6 +136,14 @@ public class Producto {
         this.cantidad = cantidad;
     }
 
+    public String getUnidadmedida() {
+        return unidadmedida;
+    }
+
+    public void setUnidadmedida(String unidadmedida) {
+        this.unidadmedida = unidadmedida;
+    }
+
     public String getIdCategoria() {
         return idCategoria;
     }
@@ -151,15 +160,6 @@ public class Producto {
         this.idProveedor = idProveedor;
     }
 
-    public String getUnidadmedida() {
-        return unidadmedida;
-    }
-
-    public void setUnidadmedida(String unidadmedida) {
-        this.unidadmedida = unidadmedida;
-    }
-    
-
     public String getError() {
         return error;
     }
@@ -167,6 +167,14 @@ public class Producto {
     public void setError(String error) {
         this.error = error;
     }
-    
+
+    public String getIdFabricante() {
+        return idFabricante;
+    }
+
+    public void setIdFabricante(String idFabricante) {
+        this.idFabricante = idFabricante;
+    }
+
     
 }

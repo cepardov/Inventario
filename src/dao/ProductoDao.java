@@ -34,7 +34,7 @@ public class ProductoDao {
             }catch(SQLException se){
                 JOptionPane.showMessageDialog(null, se);
         }
-        Object[][] data = new String[posid][15];
+        Object[][] data = new String[posid][16];
         try{
             PreparedStatement pstm = getConnection().prepareStatement("SELECT "
                     + "idProducto,"
@@ -51,7 +51,8 @@ public class ProductoDao {
                     + "cantidad,"
                     + "unidadmedida,"
                     + "idCategoria,"
-                    + "idProveedor"
+                    + "idProveedor,"
+                    + "idFabricante"
                     + " FROM producto ORDER BY idProducto");
             try (ResultSet res = pstm.executeQuery()) {
                 int increment = 0;
@@ -72,6 +73,7 @@ public class ProductoDao {
                     String estUnidadmedida = res.getString("unidadmedida");
                     String estIdCategoria = res.getString("idCategoria");
                     String estIdProveedor = res.getString("idProveedor");
+                    String estIdFabricante = res.getString("idFabricante");
 
                     data[increment][0] = estIdProducto;
                     data[increment][1] = estCodReferencia;
@@ -88,6 +90,7 @@ public class ProductoDao {
                     data[increment][12] = estUnidadmedida;
                     data[increment][13] = estIdCategoria;
                     data[increment][14] = estIdProveedor;
+                    data[increment][15] = estIdFabricante;
 
                     increment++;
                 }
@@ -95,6 +98,89 @@ public class ProductoDao {
             this.closeConnection();
             }catch(SQLException se){
                 JOptionPane.showMessageDialog(null, se);
+                System.out.println("Error="+se);
+            }
+        return data;
+    }
+    
+    public Object [][] getProductoFilter(String column, String operator, String value, String order){
+        int posid = 0;
+        try{
+            PreparedStatement pstm = getConnection().prepareStatement("SELECT count(1) as total FROM producto");
+            try (ResultSet res = pstm.executeQuery()) {
+                res.next();
+                posid = res.getInt("total");
+            }
+            this.closeConnection();
+            }catch(SQLException se){
+                JOptionPane.showMessageDialog(null, se);
+        }
+        Object[][] data = new String[posid][16];
+        try{
+            PreparedStatement pstm = getConnection().prepareStatement("SELECT "
+                    + "idProducto,"
+                    + "codReferencia,"
+                    + "ean,"
+                    + "nombre,"
+                    + "descripcion,"
+                    + "fechaIngreso,"
+                    + "valorProveedor,"
+                    + "valorNeto,"
+                    + "valorIva,"
+                    + "porcentajeDescuento,"
+                    + "vencimientoDescuento,"
+                    + "cantidad,"
+                    + "unidadmedida,"
+                    + "idCategoria,"
+                    + "idProveedor,"
+                    + "idFabricante"
+                    + " FROM producto WHERE "+column+" "+operator+""+value+" ORDER BY "+order);
+            System.out.println("SQL="+pstm);
+            try (ResultSet res = pstm.executeQuery()) {
+                int increment = 0;
+                while(res.next()){
+                    
+                    String estIdProducto = res.getString("idProducto");
+                    String estCodReferencia = res.getString("codReferencia");
+                    String estEan = res.getString("ean");
+                    String estNombre = res.getString("nombre");
+                    String estDescripcion = res.getString("descripcion");
+                    String estFechaIngreso = res.getString("fechaIngreso");
+                    String estValorProveedor = res.getString("valorProveedor");
+                    String estValorNeto = res.getString("valorNeto");
+                    String estValorIva = res.getString("valorIva");
+                    String estPorcentajeDescuento = res.getString("porcentajeDescuento");
+                    String estVencimientoDescuento = res.getString("vencimientoDescuento");
+                    String estCantidad = res.getString("cantidad");
+                    String estUnidadmedida = res.getString("unidadmedida");
+                    String estIdCategoria = res.getString("idCategoria");
+                    String estIdProveedor = res.getString("idProveedor");
+                    String estIdFabricante = res.getString("idFabricante");
+
+                    data[increment][0] = estIdProducto;
+                    data[increment][1] = estCodReferencia;
+                    data[increment][2] = estEan;
+                    data[increment][3] = estNombre;
+                    data[increment][4] = estDescripcion;
+                    data[increment][5] = estFechaIngreso;
+                    data[increment][6] = estValorProveedor;
+                    data[increment][7] = estValorNeto;
+                    data[increment][8] = estValorIva;
+                    data[increment][9] = estPorcentajeDescuento;
+                    data[increment][10] = estVencimientoDescuento;
+                    data[increment][11] = estCantidad;
+                    data[increment][12] = estUnidadmedida;
+                    data[increment][13] = estIdCategoria;
+                    data[increment][14] = estIdProveedor;
+                    data[increment][15] = estIdFabricante;
+
+                    increment++;
+                }
+            }
+            this.closeConnection();
+            }catch(SQLException se){
+                JOptionPane.showMessageDialog(null, se);
+                System.out.println("Error="+se);
             }
         return data;
     }
@@ -122,6 +208,7 @@ public class ProductoDao {
                 producto.setUnidadmedida(result.getString("unidadmedida"));
                 producto.setIdCategoria(result.getString("idCategoria"));
                 producto.setIdProveedor(result.getString("idProveedor"));
+                producto.setIdFabricante(result.getString("idFabricante"));
                 
                 result.close();
             } else {
@@ -159,6 +246,7 @@ public class ProductoDao {
                 producto.setUnidadmedida(result.getString("unidadmedida"));
                 producto.setIdCategoria(result.getString("idCategoria"));
                 producto.setIdProveedor(result.getString("idProveedor"));
+                producto.setIdFabricante(result.getString("idFabricante"));
                 
                 result.close();
             } else {
@@ -196,6 +284,7 @@ public class ProductoDao {
                 producto.setUnidadmedida(result.getString("unidadmedida"));
                 producto.setIdCategoria(result.getString("idCategoria"));
                 producto.setIdProveedor(result.getString("idProveedor"));
+                producto.setIdFabricante(result.getString("idFabricante"));
                 
                 result.close();
             } else {
@@ -233,6 +322,8 @@ public class ProductoDao {
                 producto.setUnidadmedida(result.getString("unidadmedida"));
                 producto.setIdCategoria(result.getString("idCategoria"));
                 producto.setIdProveedor(result.getString("idProveedor"));
+                producto.setIdFabricante(result.getString("idFabricante"));
+                
                 result.close();
             } else {
                 return false;
@@ -265,8 +356,9 @@ public class ProductoDao {
                     + "cantidad,"
                     + "unidadmedida,"
                     + "idCategoria,"
-                    + "idProveedor"
-                    + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                    + "idProveedor,"
+                    + "idFabricante)"
+                    + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
             saveProducto.setString(1, producto.getIdProducto());
             saveProducto.setString(2, producto.getCodReferencia());
             saveProducto.setString(3, producto.getEan());
@@ -282,6 +374,7 @@ public class ProductoDao {
             saveProducto.setString(13, producto.getUnidadmedida());
             saveProducto.setString(14, producto.getIdCategoria());
             saveProducto.setString(15, producto.getIdProveedor());
+            saveProducto.setString(16, producto.getIdFabricante());
 
             saveProducto.executeUpdate();
 
@@ -289,7 +382,7 @@ public class ProductoDao {
             return true;
         } catch (SQLException se) {
             int errorcod=se.getErrorCode();
-            System.err.println("Debug: ("+errorcod+") Error ejecutando saveProducto(): "+se.getMessage());
+            System.err.println("Debug: ("+errorcod+") Error ejecutando saveCategorias(): "+se.getMessage());
             producto.setError(""+errorcod);
             return false;
         }
@@ -313,7 +406,8 @@ public class ProductoDao {
                     + "cantidad=?,"
                     + "unidadmedida=?,"
                     + "idCategoria=?,"
-                    + "idProveedor=?"
+                    + "idProveedor=?,"
+                    + "idFabricante=?"
                     + " WHERE idProducto=?");
             saveProducto.setString(1, producto.getIdProducto());
             saveProducto.setString(2, producto.getCodReferencia());
@@ -330,7 +424,9 @@ public class ProductoDao {
             saveProducto.setString(13, producto.getUnidadmedida());
             saveProducto.setString(14, producto.getIdCategoria());
             saveProducto.setString(15, producto.getIdProveedor());
-            saveProducto.setString(16, producto.getIdProducto());
+            saveProducto.setString(16, producto.getIdFabricante());
+            saveProducto.setString(17, producto.getIdProducto());
+            
             saveProducto.executeUpdate();
             
             this.closeConnection();
