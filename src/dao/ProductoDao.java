@@ -50,7 +50,7 @@ public class ProductoDao {
                     + "vencimientoDescuento,"
                     + "cantidad,"
                     + "unidadmedida,"
-                    + "idCategoria,"
+                    + "idCategorias,"
                     + "idProveedor,"
                     + "idFabricante"
                     + " FROM producto ORDER BY idProducto");
@@ -71,7 +71,7 @@ public class ProductoDao {
                     String estVencimientoDescuento = res.getString("vencimientoDescuento");
                     String estCantidad = res.getString("cantidad");
                     String estUnidadmedida = res.getString("unidadmedida");
-                    String estIdCategoria = res.getString("idCategoria");
+                    String estIdCategoria = res.getString("idCategorias");
                     String estIdProveedor = res.getString("idProveedor");
                     String estIdFabricante = res.getString("idFabricante");
 
@@ -131,7 +131,7 @@ public class ProductoDao {
                     + "vencimientoDescuento,"
                     + "cantidad,"
                     + "unidadmedida,"
-                    + "idCategoria,"
+                    + "idCategorias,"
                     + "idProveedor,"
                     + "idFabricante"
                     + " FROM producto WHERE "+column+" "+operator+""+value+" ORDER BY "+order);
@@ -153,7 +153,7 @@ public class ProductoDao {
                     String estVencimientoDescuento = res.getString("vencimientoDescuento");
                     String estCantidad = res.getString("cantidad");
                     String estUnidadmedida = res.getString("unidadmedida");
-                    String estIdCategoria = res.getString("idCategoria");
+                    String estIdCategoria = res.getString("idCategorias");
                     String estIdProveedor = res.getString("idProveedor");
                     String estIdFabricante = res.getString("idFabricante");
 
@@ -206,7 +206,7 @@ public class ProductoDao {
                 producto.setVencimientoDescuento(result.getString("vencimientoDescuento"));
                 producto.setCantidad(result.getString("cantidad"));
                 producto.setUnidadmedida(result.getString("unidadmedida"));
-                producto.setIdCategoria(result.getString("idCategoria"));
+                producto.setIdCategoria(result.getString("idCategorias"));
                 producto.setIdProveedor(result.getString("idProveedor"));
                 producto.setIdFabricante(result.getString("idFabricante"));
                 
@@ -244,7 +244,7 @@ public class ProductoDao {
                 producto.setVencimientoDescuento(result.getString("vencimientoDescuento"));
                 producto.setCantidad(result.getString("cantidad"));
                 producto.setUnidadmedida(result.getString("unidadmedida"));
-                producto.setIdCategoria(result.getString("idCategoria"));
+                producto.setIdCategoria(result.getString("idCategorias"));
                 producto.setIdProveedor(result.getString("idProveedor"));
                 producto.setIdFabricante(result.getString("idFabricante"));
                 
@@ -282,7 +282,7 @@ public class ProductoDao {
                 producto.setVencimientoDescuento(result.getString("vencimientoDescuento"));
                 producto.setCantidad(result.getString("cantidad"));
                 producto.setUnidadmedida(result.getString("unidadmedida"));
-                producto.setIdCategoria(result.getString("idCategoria"));
+                producto.setIdCategoria(result.getString("idCategorias"));
                 producto.setIdProveedor(result.getString("idProveedor"));
                 producto.setIdFabricante(result.getString("idFabricante"));
                 
@@ -320,7 +320,7 @@ public class ProductoDao {
                 producto.setVencimientoDescuento(result.getString("vencimientoDescuento"));
                 producto.setCantidad(result.getString("cantidad"));
                 producto.setUnidadmedida(result.getString("unidadmedida"));
-                producto.setIdCategoria(result.getString("idCategoria"));
+                producto.setIdCategoria(result.getString("idCategorias"));
                 producto.setIdProveedor(result.getString("idProveedor"));
                 producto.setIdFabricante(result.getString("idFabricante"));
                 
@@ -355,7 +355,7 @@ public class ProductoDao {
                     + "vencimientoDescuento,"
                     + "cantidad,"
                     + "unidadmedida,"
-                    + "idCategoria,"
+                    + "idCategorias,"
                     + "idProveedor,"
                     + "idFabricante)"
                     + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
@@ -405,7 +405,7 @@ public class ProductoDao {
                     + "vencimientoDescuento=?,"
                     + "cantidad=?,"
                     + "unidadmedida=?,"
-                    + "idCategoria=?,"
+                    + "idCategorias=?,"
                     + "idProveedor=?,"
                     + "idFabricante=?"
                     + " WHERE idProducto=?");

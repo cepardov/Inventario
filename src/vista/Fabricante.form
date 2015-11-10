@@ -86,7 +86,7 @@
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="txtIdentificador" min="-2" pref="110" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="btnBuscar" pref="75" max="32767" attributes="0"/>
+                                  <Component id="btnBuscar" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -136,7 +136,7 @@
       <SubComponents>
         <Component class="javax.swing.JLabel" name="jLabel1">
           <Properties>
-            <Property name="text" type="java.lang.String" value="ID Favricante:"/>
+            <Property name="text" type="java.lang.String" value="ID Fabricante:"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lblIdFabricante">

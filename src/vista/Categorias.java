@@ -198,6 +198,9 @@ public class Categorias extends javax.swing.JInternalFrame {
         this.chkDescuentos.setSelected(false);
         this.jsnDescuento.setEnabled(false);
         this.jsnDescuento.setValue(new Integer(0));
+        this.btnGuardar.setEnabled(true);
+        this.btnModificar.setEnabled(false);
+        this.btnEliminar.setEnabled(false);
     }
 
     /**
